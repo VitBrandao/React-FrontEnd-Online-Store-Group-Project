@@ -4,7 +4,12 @@ class InitialPage extends Component {
   render() {
     return (
       <div>
-        <h1>Eu sou o componente InitialPage</h1>
+        <input type="text" />
+        <p
+          data-testid="home-initial-message"
+        >
+          Digite algum termo de pesquisa ou escolha uma categoria.
+        </p>
       </div>
     );
   }
