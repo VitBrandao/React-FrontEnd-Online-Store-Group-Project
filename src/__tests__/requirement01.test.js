@@ -1,6 +1,7 @@
 import * as api from '../services/api';
 import mockedCategoriesResult from '../__mocks__/categories';
 import mockFetch from '../__mocks__/mockFetch';
+// import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 
 describe('1 - Implemente o módulo de acesso à api do Mercado Livre', () => {
 
