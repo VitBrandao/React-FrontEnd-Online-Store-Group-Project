@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class InitialPage extends Component {
   render() {
+    const { handleChanges } = this.props;
     return (
       <div>
-        <input type="text" />
+        <input
+          data-testid="query-input"
+          onChange={ handleChanges }
+          name="productName"
+          type="text"
+        />
         <p
           data-testid="home-initial-message"
         >
@@ -14,5 +21,9 @@ class InitialPage extends Component {
     );
   }
 }
+
+InitialPage.propTypes = {
+  handleChanges: PropTypes.func.isRequired,
+};
 
 export default InitialPage;
