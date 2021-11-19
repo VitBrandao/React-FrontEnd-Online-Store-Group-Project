@@ -7,13 +7,15 @@ class ProductResults extends Component {
     return (
       <div>
         {
-          productInfos.map((product) => (
-            <div data-testid="product" key={ product.id }>
-              <p>{ product.title }</p>
-              <img src={ product.thumbnail } alt={ product.title } />
-              <p>{ product.price }</p>
-            </div>
-          ))
+          productInfos.length === 0
+            ? <p>Nenhum produto foi encontrado</p>
+            : productInfos.map((product) => (
+              <div data-testid="product" key={ product.id }>
+                <p>{ product.title }</p>
+                <img src={ product.thumbnail } alt={ product.title } />
+                <p>{ product.price }</p>
+              </div>
+            ))
         }
       </div>
     );

@@ -11,7 +11,7 @@ class Content extends Component {
     super();
     this.state = {
       query: '',
-      productInfos: [],
+      productInfos: [{ id: 123 }],
       categoryId: '',
     };
   }
