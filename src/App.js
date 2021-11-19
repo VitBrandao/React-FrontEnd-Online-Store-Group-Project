@@ -10,7 +10,7 @@ function App() {
       <Route exact path="/" render={ () => <InitialPage /> } />
       <Route exact path="/shoppingcart" render={ () => <ShoppingCart /> } />
       <Link to="/shoppingcart" data-testid="shopping-cart-button">
-        <button> Enviar </button>
+        <button type="button"> Enviar </button>
       </Link>
     </BrowserRouter>
   );
