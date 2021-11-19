@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
+import InitialPage from './Components/InitialPage';
+import './App.css';
 
-export default class App extends Component {
-  render() {
-    return (
-      <div>
-        <h1>Sou o componente App</h1>
-      </div>
-    );
-  }
+function App() {
+  return (
+    <BrowserRouter>
+      <Route exact path="/" render={ () => <InitialPage /> } />
+    </BrowserRouter>
+  );
 }
