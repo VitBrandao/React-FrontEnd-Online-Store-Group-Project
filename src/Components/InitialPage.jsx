@@ -9,7 +9,7 @@ class InitialPage extends Component {
         <input
           data-testid="query-input"
           onChange={ handleChanges }
-          name="productName"
+          name="query"
           type="text"
         />
         <p

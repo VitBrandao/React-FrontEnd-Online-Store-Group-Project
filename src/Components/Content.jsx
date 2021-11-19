@@ -11,7 +11,7 @@ class Content extends Component {
     super();
     this.state = {
       query: '',
-      productInfos: [],
+      productInfos: [{ id: 123 }],
       categoryId: '',
     };
   }
@@ -27,8 +27,15 @@ class Content extends Component {
     this.setState({ productInfos: response.results });
   };
 
+  fetchSpecificCategory = async ({ target }) => {
+    const { id } = target;
+    const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?category=${id}`);
+    const JSON = await response.json();
+    this.setState({ productInfos: JSON.results });
+  }
+
   render() {
-    const { handleChanges, handleClick } = this;
+    const { handleChanges, handleClick, fetchSpecificCategory } = this;
     const { productInfos } = this.state;
     return (
       <div>
@@ -48,8 +55,12 @@ class Content extends Component {
         >
           Pesquisar
         </button>
-        <Categories />
-        <ProductResults productInfos={ productInfos } />
+        <Categories fetchSpecificCategory={ fetchSpecificCategory } />
+        {
+          productInfos.length === 0
+            ? <p>Nenhum produto foi encontrado</p>
+            : <ProductResults productInfos={ productInfos } />
+        }
       </div>
     );
   }
