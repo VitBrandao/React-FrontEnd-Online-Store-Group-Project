@@ -4,6 +4,12 @@ import PropTypes from 'prop-types';
 
 class ProductResults extends Component {
   render() {
+    const redirectLink = (
+      <Link to="/productdetails">
+        <button type="button">Detalhes do Produto</button>
+      </Link>
+    );
+
     const { productInfos } = this.props;
     return (
       <div>
@@ -13,9 +19,9 @@ class ProductResults extends Component {
               <p>{ product.title }</p>
               <img src={ product.thumbnail } alt={ product.title } />
               <p>{ product.price }</p>
-              <Link to="/productdetails">
-                <button type="button">Detalhes do Produto</button>
-              </Link>
+              {
+                product.title && redirectLink
+              }
             </div>
           ))
         }

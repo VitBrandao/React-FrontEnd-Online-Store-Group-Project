@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import * as api from '../services/api';
 import InitialPage from './InitialPage';
 import ShoppingCart from '../pages/ShoppingCart';
-import Categories from './Categories';
-import ProductResults from './ProductResults';
+import ProductDetails from '../pages/ProductDetails';
 
 class Content extends Component {
   constructor() {
@@ -35,33 +34,23 @@ class Content extends Component {
   }
 
   render() {
-    const { handleChanges, handleClick, fetchSpecificCategory } = this;
     const { productInfos } = this.state;
+    const { handleChanges, handleClick, fetchSpecificCategory } = this;
     return (
-      <div>
+      <Switch>
         <Route
           exact
           path="/"
-          render={ () => <InitialPage handleChanges={ handleChanges } /> }
+          render={ () => (<InitialPage
+            handleChanges={ handleChanges }
+            handleClick={ handleClick }
+            fetchSpecificCategory={ fetchSpecificCategory }
+            productInfos={ productInfos }
+          />) }
         />
         <Route exact path="/shoppingcart" render={ () => <ShoppingCart /> } />
-        <Link to="/shoppingcart" data-testid="shopping-cart-button">
-          <button type="button"> Carrinho </button>
-        </Link>
-        <button
-          type="button"
-          onClick={ handleClick }
-          data-testid="query-button"
-        >
-          Pesquisar
-        </button>
-        <Categories fetchSpecificCategory={ fetchSpecificCategory } />
-        {
-          productInfos.length === 0
-            ? <p>Nenhum produto foi encontrado</p>
-            : <ProductResults productInfos={ productInfos } />
-        }
-      </div>
+        <Route exact path="/productdetails" render={ () => <ProductDetails /> } />
+      </Switch>
     );
   }
 }
