@@ -49,7 +49,11 @@ class Content extends Component {
           />) }
         />
         <Route exact path="/shoppingcart" render={ () => <ShoppingCart /> } />
-        <Route exact path="/productdetails" render={ () => <ProductDetails /> } />
+        <Route
+          exact
+          path="/productdetails/:productId"
+          render={ (props) => <ProductDetails { ...props } /> }
+        />
       </Switch>
     );
   }

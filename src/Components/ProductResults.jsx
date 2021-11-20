@@ -4,12 +4,6 @@ import PropTypes from 'prop-types';
 
 class ProductResults extends Component {
   render() {
-    const redirectLink = (
-      <Link to="/productdetails">
-        <button type="button">Detalhes do Produto</button>
-      </Link>
-    );
-
     const { productInfos } = this.props;
     return (
       <div>
@@ -20,7 +14,14 @@ class ProductResults extends Component {
               <img src={ product.thumbnail } alt={ product.title } />
               <p>{ product.price }</p>
               {
-                product.title && redirectLink
+                product.title && (
+                  <Link
+                    data-testid="product-detail-link"
+                    to={ `/productdetails/${product.id}` }
+                  >
+                    <button type="button">Detalhes do Produto</button>
+                  </Link>
+                )
               }
             </div>
           ))
@@ -35,3 +36,5 @@ ProductResults.propTypes = {
 };
 
 export default ProductResults;
+
+// product.attributes.map((atribute) => attribule.name ; attribule.value_name)
