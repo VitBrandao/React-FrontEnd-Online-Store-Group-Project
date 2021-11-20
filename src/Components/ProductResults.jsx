@@ -36,5 +36,3 @@ ProductResults.propTypes = {
 };
 
 export default ProductResults;
-
-// product.attributes.map((atribute) => attribule.name ; attribule.value_name)

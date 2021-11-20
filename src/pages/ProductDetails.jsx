@@ -2,13 +2,48 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class ProductDetails extends Component {
-  render() {
+  constructor() {
+    super();
+    this.state = {
+      productAttributes: {},
+    };
+  }
+
+  componentDidMount = () => {
+    this.fetchProduct();
+  };
+
+  fetchProduct = async () => {
     const { match: { params } } = this.props;
-    console.log(params);
+    const URL = `https://api.mercadolibre.com/items/${params.productId}`;
+    const response = await fetch(URL);
+    const JSON = await response.json();
+    this.setState({ productAttributes: JSON });
+  }
+
+  render() {
+    const { productAttributes: { title, thumbnail, price, attributes } } = this.state;
     return (
-      <div>
-        <h1>Sou a page productDetails</h1>
-      </div>
+      !title ? <p>Carregando...</p> : (
+        <div>
+          <p data-testid="product-detail-name">{ title }</p>
+          <img src={ thumbnail } alt={ title } />
+          <p>{ price }</p>
+          <ul>
+            {
+              attributes.map((attr) => (
+                <li key={ attr.id }>
+                  <p>
+                    {attr.name}
+                    :
+                    { attr.value_name }
+                  </p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      )
     );
   }
 }
@@ -25,3 +60,5 @@ ProductDetails.propTypes = {
 };
 
 export default ProductDetails;
+
+// product.attributes.map((atribute) => attribule.name ; attribule.value_name)
