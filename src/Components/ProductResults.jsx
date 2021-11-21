@@ -10,9 +10,9 @@ class ProductResults extends Component {
         {
           productInfos.map((product) => (
             <div data-testid="product" key={ product.id }>
-              <p>{ product.title }</p>
+              <p>{product.title}</p>
               <img src={ product.thumbnail } alt={ product.title } />
-              <p>{ product.price }</p>
+              <p>{product.price}</p>
               {
                 product.title && (
                   <Link
@@ -20,6 +20,16 @@ class ProductResults extends Component {
                     to={ `/productdetails/${product.id}` }
                   >
                     <button type="button">Detalhes do Produto</button>
+                  </Link>
+                )
+              }
+              {
+                product.title && (
+                  <Link
+                    data-testid="product-add-to-cart"
+                    to="/shoppingcart"
+                  >
+                    <button type="button">Adicionar ao carrinho</button>
                   </Link>
                 )
               }
