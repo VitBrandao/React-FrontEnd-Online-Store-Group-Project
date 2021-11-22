@@ -6,6 +6,8 @@ class ShoppingCart extends React.Component {
     this.state = {
       itensInCart: [],
       itensInfos: [],
+      uniqueItensInCart: [],
+      uniqueItensInfos: [],
     };
   }
 
@@ -17,13 +19,19 @@ class ShoppingCart extends React.Component {
 
   updateItensIncart = (itens) => {
     this.setState({ itensInCart: [...itens] }, () => this.getInfoOfProducts());
+    // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+    this.setState({ uniqueItensInCart: [...new Set(itens)] });
   }
 
   getInfoOfProducts = async () => {
-    const { itensInCart } = this.state;
+    const { itensInCart, uniqueItensInCart } = this.state;
     itensInCart.map(async (item) => {
       const info = await this.fetchProduct(item);
       this.setState((prev) => ({ itensInfos: [...prev.itensInfos, info] }));
+    });
+    uniqueItensInCart.map(async (item) => {
+      const info = await this.fetchProduct(item);
+      this.setState((prev) => ({ uniqueItensInfos: [...prev.uniqueItensInfos, info] }));
     });
   };
 
@@ -35,7 +43,7 @@ class ShoppingCart extends React.Component {
   }
 
   render() {
-    const { itensInfos } = this.state;
+    const { itensInfos, uniqueItensInfos } = this.state;
     return (
       <div>
         <p data-testid="shopping-cart-empty-message">
@@ -43,11 +51,17 @@ class ShoppingCart extends React.Component {
         </p>
         <ul>
           {
-            itensInfos.map((item) => (
+            uniqueItensInfos.map((item) => (
               <div key={ item.id }>
-                <p>{item.title}</p>
+                <p data-testid="shopping-cart-product-name">{item.title}</p>
                 <img src={ item.thumbnail } alt={ item.title } />
-                <p>{ item.price }</p>
+                <p
+                  data-testid="shopping-cart-product-quantity"
+                >
+                  {
+                    itensInfos.filter((element) => element.title === item.title).length
+                  }
+                </p>
               </div>
             ))
           }
