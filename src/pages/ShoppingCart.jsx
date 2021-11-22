@@ -13,6 +13,9 @@ class ShoppingCart extends React.Component {
 
   componentDidMount = () => {
     const itens = localStorage.getItem('itensInCart');
+    if (!itens) {
+      return 1;
+    }
     const result = itens.split(',');
     this.updateItensIncart(result);
   };
