@@ -64,7 +64,10 @@ class Content extends Component {
         <Route
           exact
           path="/productdetails/:productId"
-          render={ (props) => <ProductDetails { ...props } /> }
+          render={ (props) => (<ProductDetails
+            addToCartClick={ this.addToCartClick }
+            { ...props }
+          />) }
         />
       </Switch>
     );

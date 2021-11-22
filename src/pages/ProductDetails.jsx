@@ -22,17 +22,8 @@ class ProductDetails extends Component {
     this.setState({ productAttributes: JSON });
   }
 
-  addToShoppingCart = async ({ target }) => {
-    const getLocalStorage = localStorage.getItem('itensInCart');
-    if (!getLocalStorage) {
-      return 1;
-    }
-
-    const splitGetLocalStorage = getLocalStorage.split(',');
-    localStorage.setItem('itensInCart', [...splitGetLocalStorage, target.id]);
-  }
-
   render() {
+    const { addToCartClick } = this.props;
     const { productAttributes: { title, thumbnail, price, attributes, id } } = this.state;
     return (
       !title ? <p>Carregando...</p> : (
@@ -62,7 +53,7 @@ class ProductDetails extends Component {
             <button
               type="button"
               data-testid="product-detail-add-to-cart"
-              onClick={ this.addToShoppingCart }
+              onClick={ addToCartClick }
               id={ id }
             >
               Adicionar ao Carrinho
@@ -83,6 +74,7 @@ ProductDetails.propTypes = {
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
   }).isRequired,
+  addToCartClick: PropTypes.func.isRequired,
 };
 
 export default ProductDetails;
