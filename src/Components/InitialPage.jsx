@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import Categories from './Categories';
+import ProductResults from './ProductResults';
 
 class InitialPage extends Component {
   render() {
-    const { handleChanges } = this.props;
+    const {
+      handleChanges, handleClick, fetchSpecificCategory, productInfos,
+    } = this.props;
+
+    const elementContainingResults = (
+      <ProductResults
+        productInfos={ productInfos }
+      />);
+
     return (
       <div>
         <input
@@ -17,6 +28,22 @@ class InitialPage extends Component {
         >
           Digite algum termo de pesquisa ou escolha uma categoria.
         </p>
+        <Link to="/shoppingcart" data-testid="shopping-cart-button">
+          <button type="button"> Carrinho </button>
+        </Link>
+        <button
+          type="button"
+          onClick={ handleClick }
+          data-testid="query-button"
+        >
+          Pesquisar
+        </button>
+        <Categories fetchSpecificCategory={ fetchSpecificCategory } />
+        {
+          productInfos.length === 0
+            ? <p>Nenhum produto foi encontrado</p>
+            : elementContainingResults
+        }
       </div>
     );
   }
@@ -24,6 +51,10 @@ class InitialPage extends Component {
 
 InitialPage.propTypes = {
   handleChanges: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired,
+  fetchSpecificCategory: PropTypes.func.isRequired,
+  productInfos: PropTypes.arrayOf(PropTypes.object).isRequired,
+
 };
 
 export default InitialPage;
