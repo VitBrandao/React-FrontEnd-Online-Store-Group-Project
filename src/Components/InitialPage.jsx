@@ -7,11 +7,12 @@ import ProductResults from './ProductResults';
 class InitialPage extends Component {
   render() {
     const {
-      handleChanges, handleClick, fetchSpecificCategory, productInfos,
+      handleChanges, handleClick, fetchSpecificCategory, productInfos, addToCartClick,
     } = this.props;
 
     const elementContainingResults = (
       <ProductResults
+        addToCartClick={ addToCartClick }
         productInfos={ productInfos }
       />);
 
@@ -28,8 +29,8 @@ class InitialPage extends Component {
         >
           Digite algum termo de pesquisa ou escolha uma categoria.
         </p>
-        <Link to="/shoppingcart" data-testid="shopping-cart-button">
-          <button type="button"> Carrinho </button>
+        <Link to="/shoppingcart">
+          <button type="button" data-testid="shopping-cart-button"> Carrinho </button>
         </Link>
         <button
           type="button"
@@ -50,6 +51,7 @@ class InitialPage extends Component {
 }
 
 InitialPage.propTypes = {
+  addToCartClick: PropTypes.func.isRequired,
   handleChanges: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
   fetchSpecificCategory: PropTypes.func.isRequired,
