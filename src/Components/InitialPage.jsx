@@ -7,7 +7,14 @@ import ProductResults from './ProductResults';
 class InitialPage extends Component {
   render() {
     const {
-      handleChanges, handleClick, fetchSpecificCategory, productInfos } = this.props;
+      handleChanges, handleClick, fetchSpecificCategory, productInfos,
+    } = this.props;
+
+    const elementContainingResults = (
+      <ProductResults
+        productInfos={ productInfos }
+      />);
+
     return (
       <div>
         <input
@@ -35,7 +42,7 @@ class InitialPage extends Component {
         {
           productInfos.length === 0
             ? <p>Nenhum produto foi encontrado</p>
-            : <ProductResults productInfos={ productInfos } />
+            : elementContainingResults
         }
       </div>
     );
