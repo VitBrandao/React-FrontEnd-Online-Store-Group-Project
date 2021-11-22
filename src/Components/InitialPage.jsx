@@ -29,7 +29,7 @@ class InitialPage extends Component {
           Digite algum termo de pesquisa ou escolha uma categoria.
         </p>
         <Link to="/shoppingcart" data-testid="shopping-cart-button">
-          <button type="button"> Carrinho </button>
+          <button type="button" data-testid="shopping-cart-button"> Carrinho </button>
         </Link>
         <button
           type="button"

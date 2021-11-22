@@ -21,8 +21,19 @@ class ProductDetails extends Component {
     this.setState({ productAttributes: JSON });
   }
 
+  addToShoppingCart = async ({ target }) => {
+    const getLocalStorage = localStorage.getItem("itensInCart");
+    
+    if(!getLocalStorage) {
+      return 1;
+    }
+
+    const splitGetLocalStorage = getLocalStorage.split(',');
+    localStorage.setItem("itensInCart", [...splitGetLocalStorage, target.id]);
+  }
+
   render() {
-    const { productAttributes: { title, thumbnail, price, attributes } } = this.state;
+    const { productAttributes: { title, thumbnail, price, attributes, id } } = this.state;
     return (
       !title ? <p>Carregando...</p> : (
         <div>
@@ -42,6 +53,15 @@ class ProductDetails extends Component {
               ))
             }
           </ul>
+          
+          <button 
+            type="button" 
+            data-testid="product-detail-add-to-cart"
+            onClick={ this.addToShoppingCart }
+            id={ id }
+          >
+            Adicionar ao Carrinho
+          </button>
         </div>
       )
     );
