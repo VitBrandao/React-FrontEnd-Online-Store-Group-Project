@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class ShoppingCart extends React.Component {
   constructor() {
@@ -12,18 +13,14 @@ class ShoppingCart extends React.Component {
   }
 
   componentDidMount = () => {
-    const itens = localStorage.getItem('itensInCart');
-    if (!itens) {
-      return 1;
-    }
-    const result = itens.split(',');
-    this.updateItensIncart(result);
-  };
+    this.updateItensInCart();
+  }
 
-  updateItensIncart = (itens) => {
-    this.setState({ itensInCart: [...itens] }, () => this.getInfoOfProducts());
+  updateItensInCart = () => {
+    const { itensSaved } = this.props;
+    this.setState({ itensInCart: [itensSaved] }, () => this.getInfoOfProducts());
     // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
-    this.setState({ uniqueItensInCart: [...new Set(itens)] });
+    this.setState({ uniqueItensInCart: [...new Set(itensSaved)] });
   }
 
   getInfoOfProducts = async () => {
@@ -49,30 +46,41 @@ class ShoppingCart extends React.Component {
     const { itensInfos, uniqueItensInfos } = this.state;
     return (
       <div>
-        <p data-testid="shopping-cart-empty-message">
-          Seu carrinho está vazio
-        </p>
-        <ul>
-          {
-            uniqueItensInfos.map((item) => (
-              <div key={ item.id }>
-                <p data-testid="shopping-cart-product-name">{item.title}</p>
-                <img src={ item.thumbnail } alt={ item.title } />
-                <p
-                  data-testid="shopping-cart-product-quantity"
-                >
-                  {
-                    itensInfos.filter((element) => element.title === item.title).length
-                  }
-                </p>
-              </div>
-            ))
-          }
-        </ul>
+        {
+          itensInfos.length === 0 ? (
+            <p data-testid="shopping-cart-empty-message">
+              Seu carrinho está vazio
+            </p>
+          ) : (
+            <ul>
+              {
+                uniqueItensInfos.map((item) => (
+                  <div key={ item.id }>
+                    <p data-testid="shopping-cart-product-name">{item.title}</p>
+                    <img src={ item.thumbnail } alt={ item.title } />
+                    <p
+                      data-testid="shopping-cart-product-quantity"
+                    >
+                      {
+                        itensInfos.filter(
+                          (element) => element.title === item.title,
+                        ).length
+                      }
+                    </p>
+                  </div>
+                ))
+              }
+            </ul>
+          )
+        }
       </div>
 
     );
   }
 }
+
+ShoppingCart.propTypes = {
+  itensSaved: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
 export default ShoppingCart;

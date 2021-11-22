@@ -3,28 +3,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 class ProductResults extends Component {
-  constructor() {
-    super();
-    this.state = {
-      itensInCart: [],
-    };
-  }
-
-  addToCartClick = ({ target }) => {
-    const { itensInCart } = this.state;
-    this.setState({
-      itensInCart: [...itensInCart, target.id],
-    }, () => this.setLocalStorage());
-  };
-
-  setLocalStorage = () => {
-    const { itensInCart } = this.state;
-    localStorage.setItem('itensInCart', [...itensInCart]);
-  }
-
   render() {
-    const { productInfos } = this.props;
-    const { addToCartClick } = this;
+    const { productInfos, addToCartClick } = this.props;
     return (
       <div>
         {
@@ -45,14 +25,16 @@ class ProductResults extends Component {
               }
               {
                 product.title && (
-                  <button
-                    data-testid="product-add-to-cart"
-                    type="button"
-                    onClick={ addToCartClick }
-                    id={ product.id }
-                  >
-                    Adicionar ao carrinho
-                  </button>
+                  <div>
+                    <button
+                      data-testid="product-add-to-cart"
+                      type="button"
+                      onClick={ addToCartClick }
+                      id={ product.id }
+                    >
+                      Adicionar ao carrinho
+                    </button>
+                  </div>
                 )
               }
             </div>
@@ -65,6 +47,7 @@ class ProductResults extends Component {
 
 ProductResults.propTypes = {
   productInfos: PropTypes.arrayOf(PropTypes.object).isRequired,
+  addToCartClick: PropTypes.func.isRequired,
 };
 
 export default ProductResults;

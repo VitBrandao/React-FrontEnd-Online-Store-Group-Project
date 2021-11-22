@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 class ProductDetails extends Component {
@@ -22,14 +23,13 @@ class ProductDetails extends Component {
   }
 
   addToShoppingCart = async ({ target }) => {
-    const getLocalStorage = localStorage.getItem("itensInCart");
-    
-    if(!getLocalStorage) {
+    const getLocalStorage = localStorage.getItem('itensInCart');
+    if (!getLocalStorage) {
       return 1;
     }
 
     const splitGetLocalStorage = getLocalStorage.split(',');
-    localStorage.setItem("itensInCart", [...splitGetLocalStorage, target.id]);
+    localStorage.setItem('itensInCart', [...splitGetLocalStorage, target.id]);
   }
 
   render() {
@@ -37,31 +37,37 @@ class ProductDetails extends Component {
     return (
       !title ? <p>Carregando...</p> : (
         <div>
-          <p data-testid="product-detail-name">{ title }</p>
-          <img src={ thumbnail } alt={ title } />
-          <p>{ price }</p>
-          <ul>
-            {
-              attributes.map((attr) => (
-                <li key={ attr.id }>
-                  <p>
-                    {attr.name}
-                    :
-                    { attr.value_name }
-                  </p>
-                </li>
-              ))
-            }
-          </ul>
-          
-          <button 
-            type="button" 
-            data-testid="product-detail-add-to-cart"
-            onClick={ this.addToShoppingCart }
-            id={ id }
+          <Link
+            to="/shoppingcart"
           >
-            Adicionar ao Carrinho
-          </button>
+            <button type="button" data-testid="shopping-cart-button"> Carrinho </button>
+          </Link>
+          <div>
+            <p data-testid="product-detail-name">{ title }</p>
+            <img src={ thumbnail } alt={ title } />
+            <p>{ price }</p>
+            <ul>
+              {
+                attributes.map((attr) => (
+                  <li key={ attr.id }>
+                    <p>
+                      {attr.name}
+                      :
+                      { attr.value_name }
+                    </p>
+                  </li>
+                ))
+              }
+            </ul>
+            <button
+              type="button"
+              data-testid="product-detail-add-to-cart"
+              onClick={ this.addToShoppingCart }
+              id={ id }
+            >
+              Adicionar ao Carrinho
+            </button>
+          </div>
         </div>
       )
     );
@@ -80,5 +86,3 @@ ProductDetails.propTypes = {
 };
 
 export default ProductDetails;
-
-// product.attributes.map((atribute) => attribule.name ; attribule.value_name)

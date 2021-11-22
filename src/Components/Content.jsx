@@ -12,8 +12,15 @@ class Content extends Component {
       query: '',
       productInfos: [{ id: 123 }],
       categoryId: '',
+      itensSaved: [],
     };
   }
+
+  addToCartClick = ({ target }) => {
+    this.setState(
+      (prevState) => ({ itensSaved: [...prevState.itensSaved, target.id] }),
+    );
+  };
 
   handleChanges = ({ target }) => {
     const { value, name } = target;
@@ -34,7 +41,7 @@ class Content extends Component {
   }
 
   render() {
-    const { productInfos } = this.state;
+    const { productInfos, itensSaved } = this.state;
     const { handleChanges, handleClick, fetchSpecificCategory } = this;
     return (
       <Switch>
@@ -42,13 +49,18 @@ class Content extends Component {
           exact
           path="/"
           render={ () => (<InitialPage
+            addToCartClick={ this.addToCartClick }
             handleChanges={ handleChanges }
             handleClick={ handleClick }
             fetchSpecificCategory={ fetchSpecificCategory }
             productInfos={ productInfos }
           />) }
         />
-        <Route exact path="/shoppingcart" render={ () => <ShoppingCart /> } />
+        <Route
+          exact
+          path="/shoppingcart"
+          render={ () => <ShoppingCart itensSaved={ itensSaved } /> }
+        />
         <Route
           exact
           path="/productdetails/:productId"
