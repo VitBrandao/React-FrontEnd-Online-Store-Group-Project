@@ -18,17 +18,17 @@ class Content extends Component {
 
   addToCartClick = async ({ target }) => {
     const { productInfos, itensSaved } = this.state;
-    const product = productInfos.find((prod) => prod.id === target.id)
-    const checkForEqual =  itensSaved.some((p) => p.id === product.id);
+    const product = productInfos.find((prod) => prod.id === target.id);
+    const checkForEqual = itensSaved.some((p) => p.id === product.id);
     if (!checkForEqual) {
       const foundProduct = productInfos.find((item) => item.id === product.id);
-      foundProduct['quantity'] = 1;
+      foundProduct.quantity = 1;
       this.setState(
         (prevState) => ({ itensSaved: [...prevState.itensSaved, foundProduct] }),
       );
     } else {
       const foundProduct = itensSaved.find((item) => item.id === product.id);
-      foundProduct['quantity'] += 1;
+      foundProduct.quantity += 1;
     }
   };
 
