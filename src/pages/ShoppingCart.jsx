@@ -6,9 +6,7 @@ class ShoppingCart extends React.Component {
     super();
     this.state = {
       itensInCart: [],
-      itensInfos: [],
       uniqueItensInCart: [],
-      uniqueItensInfos: [],
     };
   }
 
@@ -17,76 +15,59 @@ class ShoppingCart extends React.Component {
   }
 
   updateItensInCart = () => {
-    const { itensSaved } = this.props;
-    this.setState({ itensInCart: [...itensSaved] }, () => this.getInfoOfProducts());
     // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
-    this.setState({ uniqueItensInCart: [...new Set(itensSaved)] });
-  }
-
-  getInfoOfProducts = async () => {
-    const { itensInCart, uniqueItensInCart } = this.state;
-    itensInCart.map(async (item) => {
-      const info = await this.fetchProduct(item);
-      console.log(info)
-      this.setState((prev) => ({ itensInfos: [...prev.itensInfos, info] }));
-    });
-    uniqueItensInCart.map(async (item) => {
-      const info = await this.fetchProduct(item);
-      this.setState((prev) => ({ uniqueItensInfos: [...prev.uniqueItensInfos, info] }));
-    });
-  };
-
-  fetchProduct = async (item) => {
-    const URL = `https://api.mercadolibre.com/items/${item}`;
-    const response = await fetch(URL);
-    const JSON = await response.json();
-    return JSON;
+    const { itensSaved } = this.props;
+    this.setState({ itensInCart: [...itensSaved] }, () => {
+      const unique = itensSaved.map((item) => item.id)
+      this.setState({ uniqueItensInCart: [...new Set(unique)] });
+    });    
   }
 
   handleDecreaseClick = ({ target }) => {
     const { name } = target
-    const prodQty = document.querySelectorAll('.product-quantity')[name];
+    const prodQty = document.querySelector(`.${name}`);
     const number = Number(prodQty.innerText);
 
     number > 0 ? prodQty.innerText = (number - 1).toString() : prodQty.innerText = '0';
   };
 
   handleIncreaseClick = ({ target }) => {
-    const { name  } = target;
-    const prodQty = document.querySelectorAll('.product-quantity')[name];
+    const { name  } = target
+    const prodQty = document.querySelector(`.${name}`);
     const number = Number(prodQty.innerText);
     prodQty.innerText = (number + 1).toString(); 
   };
 
   render() {
     const { handleDecreaseClick, handleIncreaseClick } = this;
-    const { itensInfos, uniqueItensInfos } = this.state;
+    const { itensInCart, uniqueItensInCart } = this.state;
+    console.log(itensInCart);
     return (
       <div>
         {
-          itensInfos.length === 0 ? (
+          itensInCart.length === 0 ? (
             <p data-testid="shopping-cart-empty-message">
               Seu carrinho está vazio
             </p>
           ) : (
             <ul>
               {
-                uniqueItensInfos.map((item, index) => (
-                  <div key={ index }>
+                uniqueItensInCart.map((item) => itensInCart.find((el) => el.id === item)).map((item) => (
+                  <div key={ item.title }>
                     <p data-testid="shopping-cart-product-name">{item.title}</p>
                     <img src={ item.thumbnail } alt={ item.title } />
                     <p
                       data-testid="shopping-cart-product-quantity"
-                      className="product-quantity"
+                      className={ item.id }
                     >
                       {
-                        itensInfos.filter(
+                        itensInCart.filter(
                           (element) => element.title === item.title,
                         ).length
                       }
                     </p>
-                    <button  name={ index } onClick={ handleDecreaseClick } type="button"  data-testid="product-decrease-quantity"> - </button>
-                    <button name={ index } onClick={ handleIncreaseClick } type="button" data-testid="product-increase-quantity"> + </button>                    
+                    <button name={ item.id }  onClick={ handleDecreaseClick } type="button"  data-testid="product-decrease-quantity"> - </button>
+                    <button name={ item.id }  onClick={ handleIncreaseClick } type="button" data-testid="product-increase-quantity"> + </button>                    
                   </div>
                 ))
               }
@@ -100,7 +81,7 @@ class ShoppingCart extends React.Component {
 }
 
 ShoppingCart.propTypes = {
-  itensSaved: PropTypes.arrayOf(PropTypes.string).isRequired,
+  itensSaved: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default ShoppingCart;
