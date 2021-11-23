@@ -27,6 +27,7 @@ class ShoppingCart extends React.Component {
     const { itensInCart, uniqueItensInCart } = this.state;
     itensInCart.map(async (item) => {
       const info = await this.fetchProduct(item);
+      console.log(info)
       this.setState((prev) => ({ itensInfos: [...prev.itensInfos, info] }));
     });
     uniqueItensInCart.map(async (item) => {
@@ -42,7 +43,23 @@ class ShoppingCart extends React.Component {
     return JSON;
   }
 
+  handleDecreaseClick = ({ target }) => {
+    const { name } = target
+    const prodQty = document.querySelectorAll('.product-quantity')[name];
+    const number = Number(prodQty.innerText);
+
+    number > 0 ? prodQty.innerText = (number - 1).toString() : prodQty.innerText = '0';
+  };
+
+  handleIncreaseClick = ({ target }) => {
+    const { name  } = target;
+    const prodQty = document.querySelectorAll('.product-quantity')[name];
+    const number = Number(prodQty.innerText);
+    prodQty.innerText = (number + 1).toString(); 
+  };
+
   render() {
+    const { handleDecreaseClick, handleIncreaseClick } = this;
     const { itensInfos, uniqueItensInfos } = this.state;
     return (
       <div>
@@ -54,12 +71,13 @@ class ShoppingCart extends React.Component {
           ) : (
             <ul>
               {
-                uniqueItensInfos.map((item) => (
-                  <div key={ item.id }>
+                uniqueItensInfos.map((item, index) => (
+                  <div key={ index }>
                     <p data-testid="shopping-cart-product-name">{item.title}</p>
                     <img src={ item.thumbnail } alt={ item.title } />
                     <p
                       data-testid="shopping-cart-product-quantity"
+                      className="product-quantity"
                     >
                       {
                         itensInfos.filter(
@@ -67,6 +85,8 @@ class ShoppingCart extends React.Component {
                         ).length
                       }
                     </p>
+                    <button  name={ index } onClick={ handleDecreaseClick } type="button"  data-testid="product-decrease-quantity"> - </button>
+                    <button name={ index } onClick={ handleIncreaseClick } type="button" data-testid="product-increase-quantity"> + </button>                    
                   </div>
                 ))
               }
