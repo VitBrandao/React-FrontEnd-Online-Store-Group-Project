@@ -18,7 +18,7 @@ class ShoppingCart extends React.Component {
 
   updateItensInCart = () => {
     const { itensSaved } = this.props;
-    this.setState({ itensInCart: [itensSaved] }, () => this.getInfoOfProducts());
+    this.setState({ itensInCart: [...itensSaved] }, () => this.getInfoOfProducts());
     // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
     this.setState({ uniqueItensInCart: [...new Set(itensSaved)] });
   }
