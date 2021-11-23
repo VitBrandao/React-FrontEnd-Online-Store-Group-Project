@@ -6,42 +6,40 @@ class ShoppingCart extends React.Component {
     super();
     this.state = {
       itensInCart: [],
-      uniqueItensInCart: [],
     };
   }
 
   componentDidMount = () => {
-    this.updateItensInCart();
-  }
+    this.generateItensSaved();
+  };
 
-  updateItensInCart = () => {
-    // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+  generateItensSaved = () => {
     const { itensSaved } = this.props;
-    this.setState({ itensInCart: [...itensSaved] }, () => {
-      const unique = itensSaved.map((item) => item.id)
-      this.setState({ uniqueItensInCart: [...new Set(unique)] });
-    });    
-  }
+    this.setState({ itensInCart: [...itensSaved] });
+  };
 
   handleDecreaseClick = ({ target }) => {
-    const { name } = target
-    const prodQty = document.querySelector(`.${name}`);
-    const number = Number(prodQty.innerText);
-
-    number > 0 ? prodQty.innerText = (number - 1).toString() : prodQty.innerText = '0';
+    const { itensInCart } = this.state;
+    const { name } = target;
+    const el = itensInCart.find((item) => item.id === name);
+    if (el.quantity > 0) {
+      el.quantity -= 1;
+    } else {
+      el.quantity = 0;
+    }
+    this.setState({ itensInCart: [...itensInCart] });
   };
 
   handleIncreaseClick = ({ target }) => {
-    const { name  } = target
-    const prodQty = document.querySelector(`.${name}`);
-    const number = Number(prodQty.innerText);
-    prodQty.innerText = (number + 1).toString(); 
-  };
+    const { itensInCart } = this.state;
+    const { name } = target;
+    itensInCart.find((item) => item.id === name).quantity += 1;
+    this.setState({ itensInCart: [...itensInCart] });
+  }
 
   render() {
+    const { itensInCart } = this.state;
     const { handleDecreaseClick, handleIncreaseClick } = this;
-    const { itensInCart, uniqueItensInCart } = this.state;
-    console.log(itensInCart);
     return (
       <div>
         {
@@ -52,7 +50,7 @@ class ShoppingCart extends React.Component {
           ) : (
             <ul>
               {
-                uniqueItensInCart.map((item) => itensInCart.find((el) => el.id === item)).map((item) => (
+                itensInCart.map((item) => (
                   <div key={ item.title }>
                     <p data-testid="shopping-cart-product-name">{item.title}</p>
                     <img src={ item.thumbnail } alt={ item.title } />
@@ -61,13 +59,25 @@ class ShoppingCart extends React.Component {
                       className={ item.id }
                     >
                       {
-                        itensInCart.filter(
-                          (element) => element.title === item.title,
-                        ).length
+                        item.quantity
                       }
                     </p>
-                    <button name={ item.id }  onClick={ handleDecreaseClick } type="button"  data-testid="product-decrease-quantity"> - </button>
-                    <button name={ item.id }  onClick={ handleIncreaseClick } type="button" data-testid="product-increase-quantity"> + </button>                    
+                    <button
+                      name={ item.id }
+                      onClick={ handleDecreaseClick }
+                      type="button"
+                      data-testid="product-decrease-quantity"
+                    >
+                      -
+                    </button>
+                    <button
+                      name={ item.id }
+                      onClick={ handleIncreaseClick }
+                      type="button"
+                      data-testid="product-increase-quantity"
+                    >
+                      +
+                    </button>
                   </div>
                 ))
               }
