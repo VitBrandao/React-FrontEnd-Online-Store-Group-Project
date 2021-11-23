@@ -17,18 +17,12 @@ class Content extends Component {
   }
 
   addToCartClick = async ({ target }) => {
-    const product = await this.fetchProduct(target.id)
+    const { productInfos } = this.state;
+    const product = productInfos.find((prod) => prod.id === target.id)
     this.setState(
       (prevState) => ({ itensSaved: [...prevState.itensSaved, product] }),
     );
   };
-
-  fetchProduct = async (item) => {
-    const URL = `https://api.mercadolibre.com/items/${item}`;
-    const response = await fetch(URL);
-    const JSON = await response.json();
-    return JSON;
-  }
 
   handleChanges = ({ target }) => {
     const { value, name } = target;
