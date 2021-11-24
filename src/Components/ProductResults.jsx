@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import AddCartButton from './AddCartButton';
 
 class ProductResults extends Component {
   render() {
@@ -14,6 +15,10 @@ class ProductResults extends Component {
               <img src={ product.thumbnail } alt={ product.title } />
               <p>{product.price}</p>
               {
+                product.shipping.free_shipping
+                && <p data-testid="free-shipping">Frete Grátis</p>
+              }
+              {
                 product.title && (
                   <Link
                     data-testid="product-detail-link"
@@ -26,14 +31,10 @@ class ProductResults extends Component {
               {
                 product.title && (
                   <div>
-                    <button
-                      data-testid="product-add-to-cart"
-                      type="button"
-                      onClick={ addToCartClick }
+                    <AddCartButton
                       id={ product.id }
-                    >
-                      Adicionar ao carrinho
-                    </button>
+                      addToCartClick={ addToCartClick }
+                    />
                   </div>
                 )
               }

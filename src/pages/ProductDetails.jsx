@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import AddCartButtonFromDetail from '../Components/AddCartButtonFromDetail';
+import CartButton from '../Components/CartButton';
+import AvaliationForm from '../Components/AvaliationForm';
 
 class ProductDetails extends Component {
   constructor() {
@@ -10,55 +12,52 @@ class ProductDetails extends Component {
     };
   }
 
-  componentDidMount = () => {
-    this.fetchProduct();
+  getProduct = () => {
+    const { match: { params }, productInfos } = this.props;
+    const prod = productInfos.find((product) => product.id === params.productId);
+    this.setState({ productAttributes: prod });
   };
 
-  fetchProduct = async () => {
-    const { match: { params } } = this.props;
-    const URL = `https://api.mercadolibre.com/items/${params.productId}`;
-    const response = await fetch(URL);
-    const JSON = await response.json();
-    this.setState({ productAttributes: JSON });
-  }
+  componentDidMount = () => {
+    this.getProduct();
+  };
 
   render() {
-    const { addToCartClick } = this.props;
-    const { productAttributes: { title, thumbnail, price, attributes, id } } = this.state;
+    const { addToCartClick, totalProductsInCart } = this.props;
+    const {
+      productAttributes: {
+        title, thumbnail, price, attributes, id, shipping } } = this.state;
     return (
       !title ? <p>Carregando...</p> : (
         <div>
-          <Link
-            to="/shoppingcart"
-          >
-            <button type="button" data-testid="shopping-cart-button"> Carrinho </button>
-          </Link>
-          <div>
-            <p data-testid="product-detail-name">{ title }</p>
-            <img src={ thumbnail } alt={ title } />
-            <p>{ price }</p>
-            <ul>
-              {
-                attributes.map((attr) => (
-                  <li key={ attr.id }>
-                    <p>
-                      {attr.name}
-                      :
-                      { attr.value_name }
-                    </p>
-                  </li>
-                ))
-              }
-            </ul>
-            <button
-              type="button"
-              data-testid="product-detail-add-to-cart"
-              onClick={ addToCartClick }
-              id={ id }
-            >
-              Adicionar ao Carrinho
-            </button>
-          </div>
+          <CartButton
+            totalProductsInCart={ totalProductsInCart }
+          />
+          <p data-testid="product-detail-name">{title}</p>
+          <img src={ thumbnail } alt={ title } />
+          <p>{price}</p>
+          {
+            shipping.free_shipping
+            && <p data-testid="free-shipping">Frete Grátis</p>
+          }
+          <ul>
+            {
+              attributes.map((attr) => (
+                <li key={ attr.id }>
+                  <p>
+                    {attr.name}
+                    :
+                    {attr.value_name}
+                  </p>
+                </li>
+              ))
+            }
+          </ul>
+          <AddCartButtonFromDetail
+            addToCartClick={ addToCartClick }
+            id={ id }
+          />
+          <AvaliationForm />
         </div>
       )
     );
@@ -75,6 +74,8 @@ ProductDetails.propTypes = {
     url: PropTypes.string.isRequired,
   }).isRequired,
   addToCartClick: PropTypes.func.isRequired,
+  totalProductsInCart: PropTypes.number.isRequired,
+  productInfos: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default ProductDetails;

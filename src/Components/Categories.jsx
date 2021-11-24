@@ -1,27 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as api from '../services/api';
 
 class Categories extends Component {
-  constructor() {
-    super();
-    this.state = {
-      categories: [],
-    };
-  }
-
-  componentDidMount = () => {
-    this.fetchCategories();
-  };
-
-  fetchCategories = async () => {
-    const response = await api.getCategories();
-    this.setState({ categories: response });
-  };
-
   render() {
-    const { fetchSpecificCategory } = this.props;
-    const { categories } = this.state;
+    const { fetchSpecificCategory, categories } = this.props;
     return (
       <div>
         <ul>
@@ -33,7 +15,7 @@ class Categories extends Component {
                   data-testid="category"
                   htmlFor={ category.id }
                 >
-                  { category.name }
+                  {category.name}
                   <input
                     onClick={ fetchSpecificCategory }
                     id={ category.id }
@@ -51,6 +33,7 @@ class Categories extends Component {
 
 Categories.propTypes = {
   fetchSpecificCategory: PropTypes.func.isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Categories;

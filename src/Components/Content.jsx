@@ -4,32 +4,57 @@ import * as api from '../services/api';
 import InitialPage from './InitialPage';
 import ShoppingCart from '../pages/ShoppingCart';
 import ProductDetails from '../pages/ProductDetails';
+import ProductResults from './ProductResults';
+import CheckoutPage from '../pages/CheckoutPage';
 
 class Content extends Component {
   constructor() {
     super();
     this.state = {
       query: '',
-      productInfos: [{ id: 123 }],
+      productInfos: [],
       categoryId: '',
       itensSaved: [],
+      categories: [],
+      totalProductsInCart: 0,
     };
   }
 
-  addToCartClick = async ({ target }) => {
+  componentDidMount = () => {
+    this.fetchCategories();
+    this.recoverItens();
+  };
+
+  recoverItens = () => {
+    const qty = localStorage.getItem('itensInCart');
+    this.setState({ totalProductsInCart: Number(qty) });
+  };
+
+  fetchCategories = async () => {
+    const response = await api.getCategories();
+    this.setState({ categories: response });
+  };
+
+  addToCartClick = ({ target }) => {
     const { productInfos, itensSaved } = this.state;
     const product = productInfos.find((prod) => prod.id === target.id);
     const checkForEqual = itensSaved.some((p) => p.id === product.id);
     if (!checkForEqual) {
-      const foundProduct = productInfos.find((item) => item.id === product.id);
-      foundProduct.quantity = 1;
+      product.quantity = 1;
       this.setState(
-        (prevState) => ({ itensSaved: [...prevState.itensSaved, foundProduct] }),
+        ((prevState) => ({ itensSaved: [...prevState.itensSaved, product] })),
+        this.updateLocalStorage(),
       );
     } else {
-      const foundProduct = itensSaved.find((item) => item.id === product.id);
-      foundProduct.quantity += 1;
+      product.quantity += 1;
     }
+    this.setState(((prev) => ({ totalProductsInCart: prev.totalProductsInCart + 1 })),
+      this.updateLocalStorage());
+  };
+
+  updateLocalStorage = () => {
+    const { totalProductsInCart } = this.state;
+    localStorage.setItem('itensInCart', totalProductsInCart + 1);
   };
 
   handleChanges = ({ target }) => {
@@ -51,7 +76,7 @@ class Content extends Component {
   }
 
   render() {
-    const { productInfos, itensSaved } = this.state;
+    const { productInfos, itensSaved, categories, totalProductsInCart } = this.state;
     const { handleChanges, handleClick, fetchSpecificCategory } = this;
     return (
       <Switch>
@@ -59,6 +84,8 @@ class Content extends Component {
           exact
           path="/"
           render={ () => (<InitialPage
+            totalProductsInCart={ totalProductsInCart }
+            categories={ categories }
             addToCartClick={ this.addToCartClick }
             handleChanges={ handleChanges }
             handleClick={ handleClick }
@@ -73,10 +100,28 @@ class Content extends Component {
         />
         <Route
           exact
+          path="/productresults"
+          render={ () => (<ProductResults
+            totalProductsInCart={ totalProductsInCart }
+            productInfos={ productInfos }
+            addToCartClick={ this.addToCartClick }
+          />) }
+        />
+        <Route
+          exact
           path="/productdetails/:productId"
           render={ (props) => (<ProductDetails
+            productInfos={ productInfos }
+            totalProductsInCart={ totalProductsInCart }
             addToCartClick={ this.addToCartClick }
             { ...props }
+          />) }
+        />
+        <Route
+          exact
+          path="/checkoutpage"
+          render={ () => (<CheckoutPage
+            itensSaved={ itensSaved }
           />) }
         />
       </Switch>

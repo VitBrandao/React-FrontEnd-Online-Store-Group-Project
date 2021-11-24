@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import CheckoutCartButton from '../Components/CheckoutCartButton';
 
 class ShoppingCart extends React.Component {
   constructor() {
@@ -33,13 +34,17 @@ class ShoppingCart extends React.Component {
   handleIncreaseClick = ({ target }) => {
     const { itensInCart } = this.state;
     const { name } = target;
-    itensInCart.find((item) => item.id === name).quantity += 1;
+    const el = itensInCart.find((item) => item.id === name);
+    if (el.quantity < el.available_quantity) {
+      el.quantity += 1;
+    }
     this.setState({ itensInCart: [...itensInCart] });
   }
 
   render() {
     const { itensInCart } = this.state;
-    const { handleDecreaseClick, handleIncreaseClick } = this;
+    const { handleDecreaseClick,
+      handleIncreaseClick, checkIncreaseProductQty } = this;
     return (
       <div>
         {
@@ -48,40 +53,44 @@ class ShoppingCart extends React.Component {
               Seu carrinho está vazio
             </p>
           ) : (
-            <ul>
-              {
-                itensInCart.map((item) => (
-                  <div key={ item.title }>
-                    <p data-testid="shopping-cart-product-name">{item.title}</p>
-                    <img src={ item.thumbnail } alt={ item.title } />
-                    <p
-                      data-testid="shopping-cart-product-quantity"
-                      className={ item.id }
-                    >
-                      {
-                        item.quantity
-                      }
-                    </p>
-                    <button
-                      name={ item.id }
-                      onClick={ handleDecreaseClick }
-                      type="button"
-                      data-testid="product-decrease-quantity"
-                    >
-                      -
-                    </button>
-                    <button
-                      name={ item.id }
-                      onClick={ handleIncreaseClick }
-                      type="button"
-                      data-testid="product-increase-quantity"
-                    >
-                      +
-                    </button>
-                  </div>
-                ))
-              }
-            </ul>
+            <div>
+              <ul>
+                {
+                  itensInCart.map((item) => (
+                    <div key={ item.title }>
+                      <p data-testid="shopping-cart-product-name">{item.title}</p>
+                      <img src={ item.thumbnail } alt={ item.title } />
+                      <p
+                        data-testid="shopping-cart-product-quantity"
+                        className={ item.id }
+                      >
+                        {
+                          item.quantity
+                        }
+                      </p>
+                      <button
+                        name={ item.id }
+                        onClick={ handleDecreaseClick }
+                        type="button"
+                        data-testid="product-decrease-quantity"
+                      >
+                        -
+                      </button>
+                      <button
+                        name={ item.id }
+                        disabled={ checkIncreaseProductQty }
+                        onClick={ handleIncreaseClick }
+                        type="button"
+                        data-testid="product-increase-quantity"
+                      >
+                        +
+                      </button>
+                    </div>
+                  ))
+                }
+              </ul>
+              <CheckoutCartButton />
+            </div>
           )
         }
       </div>
