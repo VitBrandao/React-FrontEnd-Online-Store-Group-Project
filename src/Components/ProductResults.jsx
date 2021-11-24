@@ -5,6 +5,7 @@ import AddCartButton from './AddCartButton';
 
 class ProductResults extends Component {
   render() {
+    // Product Results
     const { productInfos, addToCartClick } = this.props;
     return (
       <div>
