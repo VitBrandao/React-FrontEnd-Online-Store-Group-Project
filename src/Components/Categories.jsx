@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 class Categories extends Component {
@@ -16,14 +15,12 @@ class Categories extends Component {
                   data-testid="category"
                   htmlFor={ category.id }
                 >
-                  { category.name }
-                  <Link to="/productresults">
-                    <input
-                      onClick={ fetchSpecificCategory }
-                      id={ category.id }
-                      type="radio"
-                    />
-                  </Link>
+                  {category.name}
+                  <input
+                    onClick={ fetchSpecificCategory }
+                    id={ category.id }
+                    type="radio"
+                  />
                 </label>
               </div>
             ))

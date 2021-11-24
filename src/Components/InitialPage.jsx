@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import Categories from './Categories';
 import CartButton from './CartButton';
+import ProductResults from './ProductResults';
 
 class InitialPage extends Component {
   render() {
     const {
-      handleChanges, handleClick, fetchSpecificCategory, categories,
+      handleChanges, handleClick, fetchSpecificCategory, categories, totalProductsInCart,
+      addToCartClick,
+      productInfos,
     } = this.props;
 
     return (
@@ -23,19 +25,23 @@ class InitialPage extends Component {
         >
           Digite algum termo de pesquisa ou escolha uma categoria.
         </p>
-        <CartButton />
-        <Link to="/productresults">
-          <button
-            type="button"
-            onClick={ handleClick }
-            data-testid="query-button"
-          >
-            Pesquisar
-          </button>
-        </Link>
+        <CartButton
+          totalProductsInCart={ totalProductsInCart }
+        />
+        <button
+          type="button"
+          onClick={ handleClick }
+          data-testid="query-button"
+        >
+          Pesquisar
+        </button>
         <Categories
           categories={ categories }
           fetchSpecificCategory={ fetchSpecificCategory }
+        />
+        <ProductResults
+          productInfos={ productInfos }
+          addToCartClick={ addToCartClick }
         />
       </div>
     );
@@ -47,6 +53,9 @@ InitialPage.propTypes = {
   handleClick: PropTypes.func.isRequired,
   fetchSpecificCategory: PropTypes.func.isRequired,
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  totalProductsInCart: PropTypes.number.isRequired,
+  productInfos: PropTypes.arrayOf(PropTypes.object).isRequired,
+  addToCartClick: PropTypes.func.isRequired,
 };
 
 export default InitialPage;

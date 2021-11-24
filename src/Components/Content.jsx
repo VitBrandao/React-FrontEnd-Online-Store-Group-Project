@@ -16,11 +16,19 @@ class Content extends Component {
       categoryId: '',
       itensSaved: [],
       categories: [],
+      totalProductsInCart: 0,
     };
   }
 
   componentDidMount = () => {
     this.fetchCategories();
+    this.recoverItens();
+  };
+
+  recoverItens = () => {
+    const qty = localStorage.getItem('itensInCart');
+    console.log(qty);
+    this.setState({ totalProductsInCart: Number(qty) });
   };
 
   fetchCategories = async () => {
@@ -28,18 +36,26 @@ class Content extends Component {
     this.setState({ categories: response });
   };
 
-  addToCartClick = async ({ target }) => {
+  addToCartClick = ({ target }) => {
     const { productInfos, itensSaved } = this.state;
     const product = productInfos.find((prod) => prod.id === target.id);
     const checkForEqual = itensSaved.some((p) => p.id === product.id);
     if (!checkForEqual) {
       product.quantity = 1;
       this.setState(
-        (prevState) => ({ itensSaved: [...prevState.itensSaved, product] }),
+        ((prevState) => ({ itensSaved: [...prevState.itensSaved, product] })),
+        this.updateLocalStorage(),
       );
     } else {
       product.quantity += 1;
     }
+    this.setState(((prev) => ({ totalProductsInCart: prev.totalProductsInCart + 1 })),
+      this.updateLocalStorage());
+  };
+
+  updateLocalStorage = () => {
+    const { totalProductsInCart } = this.state;
+    localStorage.setItem('itensInCart', totalProductsInCart + 1);
   };
 
   handleChanges = ({ target }) => {
@@ -61,7 +77,7 @@ class Content extends Component {
   }
 
   render() {
-    const { productInfos, itensSaved, categories } = this.state;
+    const { productInfos, itensSaved, categories, totalProductsInCart } = this.state;
     const { handleChanges, handleClick, fetchSpecificCategory } = this;
     return (
       <Switch>
@@ -69,6 +85,7 @@ class Content extends Component {
           exact
           path="/"
           render={ () => (<InitialPage
+            totalProductsInCart={ totalProductsInCart }
             categories={ categories }
             addToCartClick={ this.addToCartClick }
             handleChanges={ handleChanges }
@@ -86,6 +103,7 @@ class Content extends Component {
           exact
           path="/productresults"
           render={ () => (<ProductResults
+            totalProductsInCart={ totalProductsInCart }
             productInfos={ productInfos }
             addToCartClick={ this.addToCartClick }
           />) }
@@ -94,6 +112,8 @@ class Content extends Component {
           exact
           path="/productdetails/:productId"
           render={ (props) => (<ProductDetails
+            productInfos={ productInfos }
+            totalProductsInCart={ totalProductsInCart }
             addToCartClick={ this.addToCartClick }
             { ...props }
           />) }

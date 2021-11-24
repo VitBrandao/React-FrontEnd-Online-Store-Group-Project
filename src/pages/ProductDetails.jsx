@@ -12,25 +12,25 @@ class ProductDetails extends Component {
     };
   }
 
-  componentDidMount = () => {
-    this.fetchProduct();
+  getProduct = () => {
+    const { match: { params }, productInfos } = this.props;
+    const prod = productInfos.find((product) => product.id === params.productId);
+    this.setState({ productAttributes: prod });
   };
 
-  fetchProduct = async () => {
-    const { match: { params } } = this.props;
-    const URL = `https://api.mercadolibre.com/items/${params.productId}`;
-    const response = await fetch(URL);
-    const JSON = await response.json();
-    this.setState({ productAttributes: JSON });
-  }
+  componentDidMount = () => {
+    this.getProduct();
+  };
 
   render() {
-    const { addToCartClick } = this.props;
+    const { addToCartClick, totalProductsInCart } = this.props;
     const { productAttributes: { title, thumbnail, price, attributes, id } } = this.state;
     return (
       !title ? <p>Carregando...</p> : (
         <div>
-          <CartButton />
+          <CartButton
+            totalProductsInCart={ totalProductsInCart }
+          />
           <p data-testid="product-detail-name">{title}</p>
           <img src={ thumbnail } alt={ title } />
           <p>{price}</p>
@@ -68,6 +68,8 @@ ProductDetails.propTypes = {
     url: PropTypes.string.isRequired,
   }).isRequired,
   addToCartClick: PropTypes.func.isRequired,
+  totalProductsInCart: PropTypes.number.isRequired,
+  productInfos: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default ProductDetails;

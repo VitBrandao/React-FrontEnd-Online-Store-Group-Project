@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AddCartButton from './AddCartButton';
-import CartButton from './CartButton';
 
 class ProductResults extends Component {
   render() {
     const { productInfos, addToCartClick } = this.props;
     return (
       <div>
-        <CartButton />
         {
           productInfos.map((product) => (
             <div data-testid="product" key={ product.id }>
