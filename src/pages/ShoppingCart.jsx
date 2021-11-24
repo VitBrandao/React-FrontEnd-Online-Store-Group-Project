@@ -6,67 +6,78 @@ class ShoppingCart extends React.Component {
     super();
     this.state = {
       itensInCart: [],
-      itensInfos: [],
-      uniqueItensInCart: [],
-      uniqueItensInfos: [],
     };
   }
 
   componentDidMount = () => {
-    this.updateItensInCart();
-  }
-
-  updateItensInCart = () => {
-    const { itensSaved } = this.props;
-    this.setState({ itensInCart: [itensSaved] }, () => this.getInfoOfProducts());
-    // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
-    this.setState({ uniqueItensInCart: [...new Set(itensSaved)] });
-  }
-
-  getInfoOfProducts = async () => {
-    const { itensInCart, uniqueItensInCart } = this.state;
-    itensInCart.map(async (item) => {
-      const info = await this.fetchProduct(item);
-      this.setState((prev) => ({ itensInfos: [...prev.itensInfos, info] }));
-    });
-    uniqueItensInCart.map(async (item) => {
-      const info = await this.fetchProduct(item);
-      this.setState((prev) => ({ uniqueItensInfos: [...prev.uniqueItensInfos, info] }));
-    });
+    this.generateItensSaved();
   };
 
-  fetchProduct = async (item) => {
-    const URL = `https://api.mercadolibre.com/items/${item}`;
-    const response = await fetch(URL);
-    const JSON = await response.json();
-    return JSON;
+  generateItensSaved = () => {
+    const { itensSaved } = this.props;
+    this.setState({ itensInCart: [...itensSaved] });
+  };
+
+  handleDecreaseClick = ({ target }) => {
+    const { itensInCart } = this.state;
+    const { name } = target;
+    const el = itensInCart.find((item) => item.id === name);
+    if (el.quantity > 0) {
+      el.quantity -= 1;
+    } else {
+      el.quantity = 0;
+    }
+    this.setState({ itensInCart: [...itensInCart] });
+  };
+
+  handleIncreaseClick = ({ target }) => {
+    const { itensInCart } = this.state;
+    const { name } = target;
+    itensInCart.find((item) => item.id === name).quantity += 1;
+    this.setState({ itensInCart: [...itensInCart] });
   }
 
   render() {
-    const { itensInfos, uniqueItensInfos } = this.state;
+    const { itensInCart } = this.state;
+    const { handleDecreaseClick, handleIncreaseClick } = this;
     return (
       <div>
         {
-          itensInfos.length === 0 ? (
+          itensInCart.length === 0 ? (
             <p data-testid="shopping-cart-empty-message">
               Seu carrinho está vazio
             </p>
           ) : (
             <ul>
               {
-                uniqueItensInfos.map((item) => (
-                  <div key={ item.id }>
+                itensInCart.map((item) => (
+                  <div key={ item.title }>
                     <p data-testid="shopping-cart-product-name">{item.title}</p>
                     <img src={ item.thumbnail } alt={ item.title } />
                     <p
                       data-testid="shopping-cart-product-quantity"
+                      className={ item.id }
                     >
                       {
-                        itensInfos.filter(
-                          (element) => element.title === item.title,
-                        ).length
+                        item.quantity
                       }
                     </p>
+                    <button
+                      name={ item.id }
+                      onClick={ handleDecreaseClick }
+                      type="button"
+                      data-testid="product-decrease-quantity"
+                    >
+                      -
+                    </button>
+                    <button
+                      name={ item.id }
+                      onClick={ handleIncreaseClick }
+                      type="button"
+                      data-testid="product-increase-quantity"
+                    >
+                      +
+                    </button>
                   </div>
                 ))
               }
@@ -80,7 +91,7 @@ class ShoppingCart extends React.Component {
 }
 
 ShoppingCart.propTypes = {
-  itensSaved: PropTypes.arrayOf(PropTypes.string).isRequired,
+  itensSaved: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default ShoppingCart;

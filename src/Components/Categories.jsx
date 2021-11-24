@@ -11,7 +11,6 @@ class Categories extends Component {
   }
 
   componentDidMount = () => {
-    // Após o componente montar
     this.fetchCategories();
   };
 

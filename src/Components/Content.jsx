@@ -16,10 +16,20 @@ class Content extends Component {
     };
   }
 
-  addToCartClick = ({ target }) => {
-    this.setState(
-      (prevState) => ({ itensSaved: [...prevState.itensSaved, target.id] }),
-    );
+  addToCartClick = async ({ target }) => {
+    const { productInfos, itensSaved } = this.state;
+    const product = productInfos.find((prod) => prod.id === target.id);
+    const checkForEqual = itensSaved.some((p) => p.id === product.id);
+    if (!checkForEqual) {
+      const foundProduct = productInfos.find((item) => item.id === product.id);
+      foundProduct.quantity = 1;
+      this.setState(
+        (prevState) => ({ itensSaved: [...prevState.itensSaved, foundProduct] }),
+      );
+    } else {
+      const foundProduct = itensSaved.find((item) => item.id === product.id);
+      foundProduct.quantity += 1;
+    }
   };
 
   handleChanges = ({ target }) => {
