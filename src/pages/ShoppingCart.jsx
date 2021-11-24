@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import CheckoutCartButton from '../Components/CheckoutCartButton';
 
 class ShoppingCart extends React.Component {
   constructor() {
@@ -48,40 +49,43 @@ class ShoppingCart extends React.Component {
               Seu carrinho está vazio
             </p>
           ) : (
-            <ul>
-              {
-                itensInCart.map((item) => (
-                  <div key={ item.title }>
-                    <p data-testid="shopping-cart-product-name">{item.title}</p>
-                    <img src={ item.thumbnail } alt={ item.title } />
-                    <p
-                      data-testid="shopping-cart-product-quantity"
-                      className={ item.id }
-                    >
-                      {
-                        item.quantity
-                      }
-                    </p>
-                    <button
-                      name={ item.id }
-                      onClick={ handleDecreaseClick }
-                      type="button"
-                      data-testid="product-decrease-quantity"
-                    >
-                      -
-                    </button>
-                    <button
-                      name={ item.id }
-                      onClick={ handleIncreaseClick }
-                      type="button"
-                      data-testid="product-increase-quantity"
-                    >
-                      +
-                    </button>
-                  </div>
-                ))
-              }
-            </ul>
+            <div>
+              <ul>
+                {
+                  itensInCart.map((item) => (
+                    <div key={ item.title }>
+                      <p data-testid="shopping-cart-product-name">{item.title}</p>
+                      <img src={ item.thumbnail } alt={ item.title } />
+                      <p
+                        data-testid="shopping-cart-product-quantity"
+                        className={ item.id }
+                      >
+                        {
+                          item.quantity
+                        }
+                      </p>
+                      <button
+                        name={ item.id }
+                        onClick={ handleDecreaseClick }
+                        type="button"
+                        data-testid="product-decrease-quantity"
+                      >
+                        -
+                      </button>
+                      <button
+                        name={ item.id }
+                        onClick={ handleIncreaseClick }
+                        type="button"
+                        data-testid="product-increase-quantity"
+                      >
+                        +
+                      </button>
+                    </div>
+                  ))
+                }
+              </ul>
+              <CheckoutCartButton />
+            </div>
           )
         }
       </div>

@@ -5,6 +5,7 @@ import InitialPage from './InitialPage';
 import ShoppingCart from '../pages/ShoppingCart';
 import ProductDetails from '../pages/ProductDetails';
 import ProductResults from './ProductResults';
+import CheckoutPage from '../pages/CheckoutPage';
 
 class Content extends Component {
   constructor() {
@@ -95,6 +96,13 @@ class Content extends Component {
           render={ (props) => (<ProductDetails
             addToCartClick={ this.addToCartClick }
             { ...props }
+          />) }
+        />
+        <Route
+          exact
+          path="/checkoutpage"
+          render={ () => (<CheckoutPage
+            itensSaved={ itensSaved }
           />) }
         />
       </Switch>
