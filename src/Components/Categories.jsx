@@ -1,27 +1,10 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import * as api from '../services/api';
 
 class Categories extends Component {
-  constructor() {
-    super();
-    this.state = {
-      categories: [],
-    };
-  }
-
-  componentDidMount = () => {
-    this.fetchCategories();
-  };
-
-  fetchCategories = async () => {
-    const response = await api.getCategories();
-    this.setState({ categories: response });
-  };
-
   render() {
-    const { fetchSpecificCategory } = this.props;
-    const { categories } = this.state;
+    const { fetchSpecificCategory, categories } = this.props;
     return (
       <div>
         <ul>
@@ -34,11 +17,13 @@ class Categories extends Component {
                   htmlFor={ category.id }
                 >
                   { category.name }
-                  <input
-                    onClick={ fetchSpecificCategory }
-                    id={ category.id }
-                    type="radio"
-                  />
+                  <Link to="/productresults">
+                    <input
+                      onClick={ fetchSpecificCategory }
+                      id={ category.id }
+                      type="radio"
+                    />
+                  </Link>
                 </label>
               </div>
             ))
@@ -51,6 +36,7 @@ class Categories extends Component {
 
 Categories.propTypes = {
   fetchSpecificCategory: PropTypes.func.isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Categories;

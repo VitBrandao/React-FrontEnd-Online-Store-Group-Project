@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import AddCartButton from './AddCartButton';
+import CartButton from './CartButton';
 
 class ProductResults extends Component {
   render() {
     const { productInfos, addToCartClick } = this.props;
     return (
       <div>
+        <CartButton />
         {
           productInfos.map((product) => (
             <div data-testid="product" key={ product.id }>
@@ -26,14 +29,10 @@ class ProductResults extends Component {
               {
                 product.title && (
                   <div>
-                    <button
-                      data-testid="product-add-to-cart"
-                      type="button"
-                      onClick={ addToCartClick }
+                    <AddCartButton
                       id={ product.id }
-                    >
-                      Adicionar ao carrinho
-                    </button>
+                      addToCartClick={ addToCartClick }
+                    />
                   </div>
                 )
               }

@@ -4,31 +4,40 @@ import * as api from '../services/api';
 import InitialPage from './InitialPage';
 import ShoppingCart from '../pages/ShoppingCart';
 import ProductDetails from '../pages/ProductDetails';
+import ProductResults from './ProductResults';
 
 class Content extends Component {
   constructor() {
     super();
     this.state = {
       query: '',
-      productInfos: [{ id: 123 }],
+      productInfos: [],
       categoryId: '',
       itensSaved: [],
+      categories: [],
     };
   }
+
+  componentDidMount = () => {
+    this.fetchCategories();
+  };
+
+  fetchCategories = async () => {
+    const response = await api.getCategories();
+    this.setState({ categories: response });
+  };
 
   addToCartClick = async ({ target }) => {
     const { productInfos, itensSaved } = this.state;
     const product = productInfos.find((prod) => prod.id === target.id);
     const checkForEqual = itensSaved.some((p) => p.id === product.id);
     if (!checkForEqual) {
-      const foundProduct = productInfos.find((item) => item.id === product.id);
-      foundProduct.quantity = 1;
+      product.quantity = 1;
       this.setState(
-        (prevState) => ({ itensSaved: [...prevState.itensSaved, foundProduct] }),
+        (prevState) => ({ itensSaved: [...prevState.itensSaved, product] }),
       );
     } else {
-      const foundProduct = itensSaved.find((item) => item.id === product.id);
-      foundProduct.quantity += 1;
+      product.quantity += 1;
     }
   };
 
@@ -51,7 +60,7 @@ class Content extends Component {
   }
 
   render() {
-    const { productInfos, itensSaved } = this.state;
+    const { productInfos, itensSaved, categories } = this.state;
     const { handleChanges, handleClick, fetchSpecificCategory } = this;
     return (
       <Switch>
@@ -59,6 +68,7 @@ class Content extends Component {
           exact
           path="/"
           render={ () => (<InitialPage
+            categories={ categories }
             addToCartClick={ this.addToCartClick }
             handleChanges={ handleChanges }
             handleClick={ handleClick }
@@ -70,6 +80,14 @@ class Content extends Component {
           exact
           path="/shoppingcart"
           render={ () => <ShoppingCart itensSaved={ itensSaved } /> }
+        />
+        <Route
+          exact
+          path="/productresults"
+          render={ () => (<ProductResults
+            productInfos={ productInfos }
+            addToCartClick={ this.addToCartClick }
+          />) }
         />
         <Route
           exact
