@@ -34,13 +34,17 @@ class ShoppingCart extends React.Component {
   handleIncreaseClick = ({ target }) => {
     const { itensInCart } = this.state;
     const { name } = target;
-    itensInCart.find((item) => item.id === name).quantity += 1;
+    const el = itensInCart.find((item) => item.id === name);
+    if (el.quantity < el.available_quantity) {
+      el.quantity += 1;
+    }
     this.setState({ itensInCart: [...itensInCart] });
   }
 
   render() {
     const { itensInCart } = this.state;
-    const { handleDecreaseClick, handleIncreaseClick } = this;
+    const { handleDecreaseClick,
+      handleIncreaseClick, checkIncreaseProductQty } = this;
     return (
       <div>
         {
@@ -74,6 +78,7 @@ class ShoppingCart extends React.Component {
                       </button>
                       <button
                         name={ item.id }
+                        disabled={ checkIncreaseProductQty }
                         onClick={ handleIncreaseClick }
                         type="button"
                         data-testid="product-increase-quantity"
