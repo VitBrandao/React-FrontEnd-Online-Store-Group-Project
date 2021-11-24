@@ -7,7 +7,7 @@ import CartButton from './CartButton';
 class InitialPage extends Component {
   render() {
     const {
-      handleChanges, handleClick, fetchSpecificCategory, categories
+      handleChanges, handleClick, fetchSpecificCategory, categories,
     } = this.props;
 
     return (
