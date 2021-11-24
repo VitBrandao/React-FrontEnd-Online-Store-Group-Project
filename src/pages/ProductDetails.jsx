@@ -24,7 +24,9 @@ class ProductDetails extends Component {
 
   render() {
     const { addToCartClick, totalProductsInCart } = this.props;
-    const { productAttributes: { title, thumbnail, price, attributes, id } } = this.state;
+    const {
+      productAttributes: {
+        title, thumbnail, price, attributes, id, shipping } } = this.state;
     return (
       !title ? <p>Carregando...</p> : (
         <div>
@@ -34,6 +36,10 @@ class ProductDetails extends Component {
           <p data-testid="product-detail-name">{title}</p>
           <img src={ thumbnail } alt={ title } />
           <p>{price}</p>
+          {
+            shipping.free_shipping
+            && <p data-testid="free-shipping">Frete Grátis</p>
+          }
           <ul>
             {
               attributes.map((attr) => (

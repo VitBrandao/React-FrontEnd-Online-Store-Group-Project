@@ -27,7 +27,6 @@ class Content extends Component {
 
   recoverItens = () => {
     const qty = localStorage.getItem('itensInCart');
-    console.log(qty);
     this.setState({ totalProductsInCart: Number(qty) });
   };
 

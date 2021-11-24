@@ -15,6 +15,10 @@ class ProductResults extends Component {
               <img src={ product.thumbnail } alt={ product.title } />
               <p>{product.price}</p>
               {
+                product.shipping.free_shipping
+                && <p data-testid="free-shipping">Frete Grátis</p>
+              }
+              {
                 product.title && (
                   <Link
                     data-testid="product-detail-link"
